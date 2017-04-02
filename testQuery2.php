@@ -6,15 +6,6 @@ include ("account.php") ;
 
 mysql_select_db($db);
 
-/*
-$year = $_GET ["year"];
-$year = mysql_real_escape_string ($year);
-$make = $_GET ["make"];
-$make = mysql_real_escape_string ($make);
-$model = $_GET ["model"];
-$model = mysql_real_escape_string ($model);
-*/
-
 $year = $_REQUEST ["year"];
 $year = mysql_real_escape_string ($year);
 $make = $_REQUEST ["make"];
@@ -29,19 +20,20 @@ $testReq2 = "SELECT * FROM recallcache WHERE year = '$year' AND make = '$make' A
 if ($result = mysql_fetch_array($query))
 {
 	$recall = $result["recall"];
+	$addCount = $result["count"];
+	$addCount++;
+	$incrementCount = "UPDATE recallcache SET count = '$addCount' WHERE year = '$year' AND make = '$make' AND model = '$model'";
+	($query = mysql_query($incrementCount)) or die (mysql_error());
 	echo $recall;
 }
 
 else
 {
-	print "No results, fetching from API...<br><br>";
-	//Everything below this is new and for testing purposes; erase if necessary!
 	$apiData = file_get_contents('https://one.nhtsa.gov/webapi/api/Recalls/vehicle/modelyear/'.($year).'/make/'.($make).'/model/'.($model).'?format=json');
-	echo $apiData;
 	$cleanData = str_replace("'", "", $apiData);
-	$insertCar = "INSERT INTO recallcache VALUES ('$year', '$make', '$model', '$cleanData')";
+	$count = '1';
+	$insertCar = "INSERT INTO recallcache VALUES ('$year', '$make', '$model', '$cleanData', '$count')";
 	($query = mysql_query($insertCar)) or die (mysql_error());
-	print "<br><br>New car inserted into database.";
 	return $cleanData;
 }
 
