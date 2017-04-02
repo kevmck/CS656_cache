@@ -34,7 +34,7 @@ else
 	$count = '1';
 	$insertCar = "INSERT INTO recallcache VALUES ('$year', '$make', '$model', '$cleanData', '$count')";
 	($query = mysql_query($insertCar)) or die (mysql_error());
-	return $cleanData;
+	echo $cleanData;
 }
 
 ?>
