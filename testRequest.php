@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<form action = "testQuery2.php">
+<form action = "cache.php">
 
 <label for "year"> Year </label>
 <input type = text name = "year" required
