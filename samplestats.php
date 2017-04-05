@@ -23,7 +23,8 @@
       google.charts.setOnLoadCallback(drawChart);
 
       // Function to draw all three charts
-      function drawChart() {
+      function drawChart()
+      {
 
         //Chart #1
         var data = google.visualization.arrayToDataTable([
@@ -51,13 +52,17 @@
           ['Model', '# of Searches', {role: 'annotation'}, {role: 'style'}],
 
           <?php
+            //Defines colors for bar and column charts.
+            $chartColors = array("#3366cc","#dc3912","#ff9900","#109618","#990099");
+            $color = 0;
+
             $chartData2 = "SELECT model, SUM(requests) AS total FROM recallcache GROUP BY model ORDER BY total DESC LIMIT 5";
             ($query = mysql_query($chartData2)) or die (mysql_error());
 
             while ($result = mysql_fetch_array($query))
             {
-              $color = dechex(rand(0x000000, 0xFFFFFF));
-              echo "['". ucfirst($result['model']) . "'," . $result['total'] . "," . $result['total'] . ",'" . $color . "'],";
+              echo "['". ucfirst($result['model']) . "'," . $result['total'] . "," . $result['total'] . ",'" . $chartColors[$color] . "'],";
+              $color++;
             }
            ?>
         ]);
@@ -67,13 +72,15 @@
           ['Car', '# of Searches', {role: 'annotation'}, {role: 'style'}],
 
           <?php
+            $color = 0;
+
             $chartData3 = "SELECT * FROM `recallcache` ORDER BY requests DESC LIMIT 5";
             ($query = mysql_query($chartData3)) or die (mysql_error());
 
             while ($result = mysql_fetch_array($query))
             {
-              $color = dechex(rand(0x000000, 0xFFFFFF));
-              echo "['" . ucfirst($result['year'])  . " " . ucfirst($result['make']) . " " . ucfirst($result['model']) . "'," . $result['requests'] . "," . $result['requests'] . ",'" . $color . "'],";
+              echo "['" . ucfirst($result['year'])  . " " . ucfirst($result['make']) . " " . ucfirst($result['model']) . "'," . $result['requests'] . "," . $result['requests'] . ",'" . $chartColors[$color] . "'],";
+              $color++;
             }
            ?>
         ]);
@@ -81,14 +88,20 @@
         // Sets options for the charts. Options will be used below when the tables are drawn.
         var options = {
                       title: 'Top 5 Searched Brands/Manufacturers',
+                      legend: {position: 'bottom'},
+                      titleTextStyle: {fontSize: 22}
                       };
 
         var options2 = {
                         title: 'Top 5 Searched Models',
+                        legend: 'none',
+                        titleTextStyle: {fontSize: 22}
                        };
 
         var options3 = {
-                        title: 'Top Searched Car'
+                        title: 'Top Searched Car',
+                        legend: 'none',
+                        titleTextStyle: {fontSize: 22}
                        };
 
         // Charts are drawn here; any options set above are applied.
@@ -102,12 +115,13 @@
         chart3.draw(data3, options3);
 
       }
+
     </script>
   </head>
   <body>
     <!-- Each chart lives in its own <div> (division) tag. -->
-    <div id="piechart" style="width: 1800px; height: 1000px;"></div>
-    <div id="columnchart_values" style="width: 1800px; height: 1000px;"></div>
-    <div id="barchart_values" style="width: 1800px; height: 1000px;"></div>
+    <div id="piechart" style="width: 900px; height: 800px; margin: auto;"></div>
+    <div id="columnchart_values" style="width: 900px; height: 800px; margin: auto;"></div>
+    <div id="barchart_values" style="width: 900px; height: 800px; margin: auto;"></div>
   </body>
 </html>
