@@ -33,6 +33,7 @@ else
 {
 	$apiData = file_get_contents('https://one.nhtsa.gov/webapi/api/Recalls/vehicle/modelyear/'.($year).'/make/'.($make).'/model/'.($model).'?format=json');
 	$cleanData = str_replace("'", "", $apiData);
+	$cleanData = str_replace("&", "and", $cleanData);
 	$count = '1';
 	$insertCar = "INSERT INTO recallcache VALUES ('$year', '$make', '$model', '$cleanData', '$count')";
 	($query = mysql_query($insertCar)) or die (mysql_error());
